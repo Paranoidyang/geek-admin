@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 let { title, todos, addTodo, clear, active, all, allDone } = useTodos()
 
 /**
@@ -26,7 +26,7 @@ let { title, todos, addTodo, clear, active, all, allDone } = useTodos()
  */
 function useTodos() {
   let title = ref("");
-  let todos = ref([{ title: "学习Vue", done: false }]);
+  let todos = useStorage('todos', []);
   function addTodo() {
     todos.value.push({
       title: title.value,
@@ -52,5 +52,18 @@ function useTodos() {
     },
   });
   return { title, todos, addTodo, clear, active, all, allDone };
+}
+
+/**
+ * 把任意数据响应式的变化同步到本地存储
+ * @param {*} name 
+ * @param {*} value 
+ */
+function useStorage(name, value = []) {
+  let data = ref(JSON.parse(localStorage.getItem(name)) || value)
+  watchEffect(() => {
+    localStorage.setItem(name, JSON.stringify(data.value))
+  })
+  return data
 }
 </script>
