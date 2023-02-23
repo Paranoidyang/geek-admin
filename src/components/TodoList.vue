@@ -1,6 +1,11 @@
 
 <template>
   <div>
+    <transition name="modal">
+      <div class="info-wrapper" v-if="showModal">
+        <div class="info"> 哥，你啥也没输入！ </div>
+      </div>
+    </transition>
     <input type="text" v-model="title" @keydown.enter="addTodo" />
     <button v-if="active < all" @click="clear">清理</button>
     <ul v-if="todos.length">
@@ -19,7 +24,8 @@
 
 <script setup>
 import { ref, computed, watchEffect } from "vue";
-let { title, todos, addTodo, clear, active, all, allDone } = useTodos()
+let { title, todos, addTodo, clear, active, all, allDone, showModal } = useTodos()
+
 
 /**
  * 清单相关数据和方法
@@ -27,7 +33,14 @@ let { title, todos, addTodo, clear, active, all, allDone } = useTodos()
 function useTodos() {
   let title = ref("");
   let todos = useStorage('todos', []);
+  let showModal = ref(false)
+
   function addTodo() {
+    if (!title.value) {
+      showModal.value = true
+      setTimeout(() => { showModal.value = false }, 1500)
+      return
+    }
     todos.value.push({
       title: title.value,
       done: false,
@@ -51,7 +64,7 @@ function useTodos() {
       });
     },
   });
-  return { title, todos, addTodo, clear, active, all, allDone };
+  return { title, todos, addTodo, clear, active, all, allDone, showModal };
 }
 
 /**
@@ -67,3 +80,33 @@ function useStorage(name, value = []) {
   return data
 }
 </script>
+<style>
+.info-wrapper {
+  position: fixed;
+  top: 20px;
+  width: 200px;
+}
+
+.info {
+  padding: 20px;
+  color: white;
+  background: #d88986;
+}
+
+.modal-enter-from {
+  opacity: 0;
+  transform: translateY(-60px);
+}
+
+.modal-enter-active {
+  transition: all 0.3s ease;
+}
+
+.modal-leave-to {
+  opacity: 0;
+  transform: translateY(-60px);
+}
+
+.modal-leave-active {
+  transition: all 0.3s ease;
+}</style>

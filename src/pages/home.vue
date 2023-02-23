@@ -4,7 +4,7 @@
   <h1>{{ x }}, {{ y }}</h1>
   <TodoList />
   <Counter />
-  <Rate v-model="score" :size="30" theme="green"></Rate>
+  <Rate v-model="score" size="30" theme="green"></Rate>
 </template>
 <script setup>
 import { ref } from 'vue'
