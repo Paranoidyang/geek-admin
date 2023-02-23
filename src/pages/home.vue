@@ -4,11 +4,15 @@
   <h1>{{ x }}, {{ y }}</h1>
   <TodoList />
   <Counter />
+  <Rate :value="3"></Rate>
+  <Rate :value="4" theme="red"></Rate>
+  <Rate :value="1" theme="green"></Rate>
 </template>
 <script setup>
 import { ref } from 'vue'
 import TodoList from '../components/Todolist.vue'
 import Counter from '../components/Counter.vue'
+import Rate from '../components/Rate.vue'
 import { useMouse } from '../utils/mouse'
 let x = ref(0)
 let y = ref(0)
