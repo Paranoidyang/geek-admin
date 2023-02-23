@@ -1,30 +1,65 @@
-
 <template>
   <div :style="fontstyle">
-    {{ rate }}
+    <div class="rate" @mouseleave="mouseleave">
+      <span @mouseover="mouseOver(num)" v-for="num in 5" :key="num">☆</span>
+      <span class="hollow" :style="fontwidth">
+        <span @click="onRate(num)" @mouseover="mouseOver(num)" v-for="num in 5" :key="num">★</span>
+      </span>
+
+    </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
+import { computed, ref } from "vue";
 let props = defineProps({
-  value: Number,
-  theme: {
-    type: String,
-    default: 'orange'
-  }
-})
-let rate = computed(() => "★★★★★☆☆☆☆☆".slice(5 - props.value, 10 - props.value))
+  modelValue: Number,
+  theme: { type: String, default: "orange" },
+  size: { type: String, default: "15" },
+});
 const themeObj = {
-  'black': '#000',
-  'white': '#fff',
-  'red': '#f5222d',
-  'orange': '#fa541c',
-  'yellow': '#fadb14',
-  'green': '#73d13d',
-  'blue': '#40a9ff'
+  black: "#000",
+  white: "#fff",
+  red: "#f5222d",
+  orange: "#fa541c",
+  yellow: "#fadb14",
+  green: "#73d13d",
+  blue: "#40a9ff",
+};
+const fontstyle = computed(() => {
+  return `color:${themeObj[props.theme]};`;
+});
+const fontSize = computed(() => {
+  return `${props.size}px`
+})
+// 评分宽度
+let width = ref(props.modelValue);
+function mouseOver(i) {
+  width.value = i;
 }
-// 以下两种写法都可以，style接受字符串或者对象形式
-// const fontstyle = computed(() => { return `color: ${themeObj[props.theme]};` })
-const fontstyle = computed(() => ({ color: themeObj[props.theme] }))
+function mouseleave() {
+  width.value = props.modelValue;
+}
+const fontwidth = computed(() => `width:${width.value}em;`);
+let emits = defineEmits(['update:modelValue']); // 定义emits
+function onRate(num) {
+  emits("update:modelValue", num); //通过@引用
+}
 </script>
+
+<style scoped>
+.rate {
+  position: relative;
+  display: inline-block;
+  font-size: v-bind(fontSize);
+}
+
+.rate>span.hollow {
+  position: absolute;
+  display: inline-block;
+  top: 0;
+  left: 0;
+  width: 0;
+  overflow: hidden;
+}
+</style>
