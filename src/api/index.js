@@ -1,10 +1,11 @@
 
 import axios from 'axios'
-import { useMsgbox, Message } from 'element3'
+// import { useMsgbox, Message } from 'element3'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 const service = axios.create({
+  // eslint-disable-next-line no-undef
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000, // request timeout
 })
