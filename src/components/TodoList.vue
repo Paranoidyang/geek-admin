@@ -1,9 +1,8 @@
-
 <template>
   <div>
     <transition name="modal">
       <div class="info-wrapper" v-if="showModal">
-        <div class="info"> 哥，你啥也没输入！ </div>
+        <div class="info">哥，你啥也没输入！</div>
       </div>
     </transition>
     <input type="text" v-model="title" @keydown.enter="addTodo" />
@@ -15,7 +14,8 @@
       </li>
     </ul>
     <div v-else>暂无数据</div>
-    <div> 全选
+    <div>
+      全选
       <input type="checkbox" v-model="allDone" />
       <span> {{ active }} / {{ all }} </span>
     </div>
@@ -24,22 +24,24 @@
 
 <script setup>
 import { ref, computed, watchEffect } from "vue";
-let { title, todos, addTodo, clear, active, all, allDone, showModal } = useTodos()
-
+let { title, todos, addTodo, clear, active, all, allDone, showModal } =
+  useTodos();
 
 /**
  * 清单相关数据和方法
  */
 function useTodos() {
   let title = ref("");
-  let todos = useStorage('todos', []);
-  let showModal = ref(false)
+  let todos = useStorage("todos", []);
+  let showModal = ref(false);
 
   function addTodo() {
     if (!title.value) {
-      showModal.value = true
-      setTimeout(() => { showModal.value = false }, 1500)
-      return
+      showModal.value = true;
+      setTimeout(() => {
+        showModal.value = false;
+      }, 1500);
+      return;
     }
     todos.value.push({
       title: title.value,
@@ -69,18 +71,35 @@ function useTodos() {
 
 /**
  * 把任意数据响应式的变化同步到本地存储
- * @param {*} name 
- * @param {*} value 
+ * @param {*} name
+ * @param {*} value
  */
 function useStorage(name, value = []) {
-  let data = ref(JSON.parse(localStorage.getItem(name)) || value)
+  let data = ref(JSON.parse(localStorage.getItem(name)) || value);
   watchEffect(() => {
-    localStorage.setItem(name, JSON.stringify(data.value))
-  })
-  return data
+    localStorage.setItem(name, JSON.stringify(data.value));
+  });
+  return data;
 }
 </script>
-<style>
+<style lang="scss" scoped>
+$padding: 10px;
+$white: #fff;
+ul {
+  width: 500px;
+  margin: 0 auto;
+  padding: 0;
+  li {
+    &:hover {
+      cursor: pointer;
+    }
+    list-style-type: none;
+    margin-bottom: $padding;
+    padding: $padding;
+    background: $white;
+    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
+  }
+}
 .info-wrapper {
   position: fixed;
   top: 20px;
@@ -109,4 +128,5 @@ function useStorage(name, value = []) {
 
 .modal-leave-active {
   transition: all 0.3s ease;
-}</style>
+}
+</style>
