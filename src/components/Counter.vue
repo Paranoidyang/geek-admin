@@ -6,12 +6,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-let count = ref(1)
-let color = ref('red')
+// ref版本
+// import { ref } from "vue";
+// let count = ref(1)
+// let color = ref('red')
+// function add() {
+//   count.value++
+//   color.value = Math.random() > 0.5 ? "blue" : "red"
+// }
+
+// vuex版本
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+let store = useStore()
+let count = computed(() => store.state.count)
+
 function add() {
-  count.value++
-  color.value = Math.random() > 0.5 ? "blue" : "red"
+  store.commit('add')
 }
 </script>
 
